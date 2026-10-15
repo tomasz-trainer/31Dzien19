@@ -7,10 +7,10 @@ namespace P06Shop.Shared.Services.AuthService
 {
     public interface IAuthService
     {
-        Task<ServiceResponse<string>> Login(UserLoginDto userLoginDto);
-        
-        Task<ServiceResponse<int>> Register(UserRegisterDto userRegisterDto);
+        Task<ServiceResponse<string>> Login(string email, string password);
 
-        Task<ServiceResponse<bool>> ChangePassword(string newPassword);
+        Task<ServiceResponse<int>> Register(User user, string password);
+
+        Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword);
     }
 }

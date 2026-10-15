@@ -24,10 +24,10 @@ namespace P05Shop.API.Services
             throw new NotImplementedException();
         }
 
-        public async Task<ServiceResponse<string>> Login(UserLoginDto userLoginDto)
+        public async Task<ServiceResponse<string>> Login(string email, string password)
         {
            
-            var user=  await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower().Equals(userLoginDto.Email.ToLower()));
+            var user=  await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower().Equals(email.ToLower()));
 
             if (user == null)
             {
@@ -37,7 +37,7 @@ namespace P05Shop.API.Services
                     Message = "User not found."
                 };
             }
-            else if (!VerifyPasswordHash(userLoginDto.Password, user.PasswordHash, user.PasswordSalt))
+            else if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             {
                 return new ServiceResponse<string>
                 {
@@ -93,7 +93,55 @@ namespace P05Shop.API.Services
             }
         }
 
-        public Task<ServiceResponse<int>> Register(UserRegisterDto userRegisterDto)
+        public async Task<ServiceResponse<int>> Register(User user, string newPassword)
+        {
+            if(await UserExists(user.Email))
+            {
+                return new ServiceResponse<int>
+                {
+                    Success = false,
+                    Message = "User already exists."
+                };
+            }
+
+            CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<int>
+            {
+                Data = user.Id,
+                Success = true,
+                Message = "User registered successfully."
+            };
+
+
+        }
+
+        private void CreatePasswordHash(string newPassword, out byte[] passwordHash, out byte[] passwordSalt)
+        {
+            using (var hmac = new System.Security.Cryptography.HMACSHA512())
+            {
+                passwordSalt = hmac.Key;
+                passwordHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(newPassword));
+            }
+        }
+
+        private async Task<bool> UserExists(string email)
+        {
+            if (await _context.Users.AnyAsync(u => u.Email.ToLower() == email.ToLower()))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
         {
             throw new NotImplementedException();
         }
