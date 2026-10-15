@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using P05Shop.API.Models;
 using P05Shop.API.Services;
@@ -40,13 +41,18 @@ namespace P05Shop.API
             // addSingleton - oznacza, że obiekt będzie tworzony tylko raz i będzie istniał tak długo, jak długo istnieje aplikacja
 
 
-            builder.Services.AddAuthentication("Bearer")
+            string token = builder.Configuration.GetSection("AppSettings:Token").Value;
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer("Bearer", options =>
                 {
-                    options.Authority = "https://localhost:5001"; // adres serwera autoryzacji
+                   // options.Authority = "https://localhost:5001"; // adres serwera autoryzacji
                     options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                     {
-                        ValidateAudience = false
+                        ValidateAudience = false,
+                        ValidateIssuer = false,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(token))
+
                     };
                 });
 
