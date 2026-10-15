@@ -20,10 +20,10 @@
         </Grid.ColumnDefinitions>
 
         <Label Content="Email" Grid.Row="0" Grid.Column="0"></Label>
-        <TextBlock Text="{Binding UserLoginDto.Email}" Grid.Row="0" Grid.Column="1"></TextBlock>
+        <TextBox Text="{Binding UserLoginDto.Email}" Grid.Row="0" Grid.Column="1"></TextBox>
 
         <Label Content="Password" Grid.Row="1" Grid.Column="0"></Label>
-        <TextBlock Text="{Binding UserLoginDto.Password}" Grid.Row="1" Grid.Column="1"></TextBlock>
+        <TextBox Text="{Binding UserLoginDto.Password}" Grid.Row="1" Grid.Column="1"></TextBox>
 
         <Button Command="{Binding LoginCommand}" Margin="5" Content="Login" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"></Button>
     

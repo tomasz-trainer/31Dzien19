@@ -26,21 +26,31 @@ namespace P03WeatherForecastWPF.Client.ViewModels
         }
 
         [ObservableProperty]
-        private UserLoginDto userLoginDto;
+        private UserLoginDto userLoginDto = new UserLoginDto();
 
 
         [RelayCommand]
         public async Task Login()
         {
-            var result = await _authApiClientService.Login(UserLoginDto);
-            if (result.Success)
+            try
             {
-                Token = result.Data;
+                var result = await _authApiClientService.Login(UserLoginDto);
+
+                if (result.Success)
+                {
+                    Token = result.Data;
+                }
+                else
+                {
+                    _meesageDialogService.ShowMessage(result.Message);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                _meesageDialogService.ShowMessage(result.Message);
+
+                throw;
             }
+            
 
         }
 

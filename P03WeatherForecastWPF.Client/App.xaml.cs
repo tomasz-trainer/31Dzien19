@@ -40,14 +40,20 @@ namespace P03WeatherForecastWPF.Client
             services.AddHttpClient<IProductService, ProductService>()
                 .ConfigureHttpClient(client =>
                 {
-                    client.BaseAddress = new Uri("http://20.86.59.56"); // ustawienie adresu bazowego dla klienta HTTP
+                    client.BaseAddress = new Uri("https://localhost:7127"); // ustawienie adresu bazowego dla klienta HTTP
                 });
 
             services.AddHttpClient<IMeteoService, LocalMeteoService>()
            .ConfigureHttpClient(client =>
            {
-               client.BaseAddress = new Uri("http://20.86.59.56"); // ustawienie adresu bazowego dla klienta HTTP
+               client.BaseAddress = new Uri("https://localhost:7127"); // ustawienie adresu bazowego dla klienta HTTP
            });
+
+            services.AddHttpClient<IAuthApiClientService, AuthApiClientService>()
+       .ConfigureHttpClient(client =>
+       {
+           client.BaseAddress = new Uri("https://localhost:7127"); // ustawienie adresu bazowego dla klienta HTTP
+       });
         }
 
         private void ConfigureViews(IServiceCollection services)
