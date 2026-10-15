@@ -19,11 +19,6 @@ namespace P05Shop.API.Services
             _context = dataContext;
         }
 
-        public Task<ServiceResponse<bool>> ChangePassword(string newPassword)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<ServiceResponse<string>> Login(string email, string password)
         {
            
@@ -141,9 +136,34 @@ namespace P05Shop.API.Services
             return false;
         }
 
-        public Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
+        public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
         {
-            throw new NotImplementedException();
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "User not found."
+                };
+            }
+
+            CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+            user.PasswordHash = passwordHash;
+            user.PasswordSalt = passwordSalt;
+
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<bool>
+            {
+                Data = true,
+                Success = true,
+                Message = "Password changed successfully."
+            };
         }
+
+
+       
+
     }
 }
