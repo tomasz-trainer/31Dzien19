@@ -40,6 +40,16 @@ namespace P05Shop.API
             // addSingleton - oznacza, że obiekt będzie tworzony tylko raz i będzie istniał tak długo, jak długo istnieje aplikacja
 
 
+            builder.Services.AddAuthentication("Bearer")
+                .AddJwtBearer("Bearer", options =>
+                {
+                    options.Authority = "https://localhost:5001"; // adres serwera autoryzacji
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateAudience = false
+                    };
+                });
+
 
             builder.Services.AddCors(options =>
             {
@@ -65,6 +75,7 @@ namespace P05Shop.API
 
             app.UseCors();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

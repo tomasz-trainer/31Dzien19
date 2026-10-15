@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using P06Shop.Shared;
 using P06Shop.Shared.Auth;
 using P06Shop.Shared.Services.AuthService;
@@ -7,6 +8,7 @@ namespace P05Shop.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+  // [Authorize]
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
@@ -41,6 +43,12 @@ namespace P05Shop.API.Controllers
                 return BadRequest(response);
             }
             return Ok(response);
+        }
+
+        [HttpGet("secret"), Authorize]
+        public string SecretKey()
+        {
+            return "This is my secret key for JWT token generation";
         }
 
 
