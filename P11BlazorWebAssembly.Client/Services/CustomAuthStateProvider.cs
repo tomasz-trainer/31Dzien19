@@ -9,6 +9,12 @@ namespace P11BlazorWebAssembly.Client.Services
         private readonly ILocalStorageService _localStorageService;
         private readonly HttpClient _httpClient;
 
+
+        public CustomAuthStateProvider(ILocalStorageService localStorageService, HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+            _localStorageService = localStorageService;
+        }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             string authToken = await _localStorageService.GetItemAsync<string>("authToken");
@@ -22,14 +28,22 @@ namespace P11BlazorWebAssembly.Client.Services
 
                 try
                 {
-                    identity = new ClaimsIdentity()
+                    identity = new ClaimsIdentity(ParseClaimsFromJwt(authToken), "jwt");
+                    _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", authToken.Replace("\"",""));
                 }
                 catch (Exception)
                 {
-
-                    throw;
+                    await _localStorageService.RemoveItemAsync("authToken");
+                    identity = new ClaimsIdentity();
                 }
             }
+
+            var user = new ClaimsPrincipal(identity);
+            var state = new AuthenticationState(user);
+            NotifyAuthenticationStateChanged(Task.FromResult(state));
+            return state;
+
+
         }
 
         public IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
