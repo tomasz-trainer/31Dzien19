@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using P03WeatherForecastWPF.Client.Services;
 using P06Shop.Shared.Services.ProductService;
+using P11BlazorWebAssembly.Client.Services;
+using System.Security.Cryptography;
 
 namespace P11BlazorWebAssembly.Client
 {
@@ -20,6 +23,12 @@ namespace P11BlazorWebAssembly.Client
             {
                 client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]);
             });
+
+            builder.Services.AddLocalStorageServices();
+
+            builder.Services.AddAuthorizationCore();
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
+
 
             await builder.Build().RunAsync();
         }
