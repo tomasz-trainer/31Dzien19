@@ -33,9 +33,12 @@ namespace P05Shop.API
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IMeteoService, MeteoService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
-            builder.Services.AddScoped<AuthApiClientService, AuthService>();
+
+            // builder.Services.AddScoped<IAuthApiClientService, AuthApiClientService>(); 
 
 
+            builder.Services.AddHttpClient<IAuthApiClientService, AuthApiClientService>();
+  
             // addScoped - oznacza, że w trakcie jednego requestu będzie istniała tylko jedna instancja klasy ProductService
             // addTransient - oznacza, że obiekt będzie tworzony za każdym razem, gdy odwolujemy się do niego
             // addSingleton - oznacza, że obiekt będzie tworzony tylko raz i będzie istniał tak długo, jak długo istnieje aplikacja
