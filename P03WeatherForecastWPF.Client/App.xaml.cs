@@ -4,6 +4,7 @@ using P03WeatherForecastWPF.Client.Services;
 using P03WeatherForecastWPF.Client.ViewModels;
 using P04WeatherForecastConsole.Client;
 using P06Shop.Shared;
+using P06Shop.Shared.Services.AuthService;
 using P06Shop.Shared.Services.ProductService;
 using P06Shop.Shared.Services.WeatherSeervice;
 using System.Configuration;
@@ -55,6 +56,7 @@ namespace P03WeatherForecastWPF.Client
             services.AddTransient<SecondWindow>();
             services.AddTransient<ShopProductsView>();
             services.AddTransient<ProductDetailsView>();
+            services.AddTransient<LoginView>();
         }
 
         private void ConfigureViewModels(IServiceCollection services)
@@ -62,7 +64,7 @@ namespace P03WeatherForecastWPF.Client
             services.AddSingleton<IMainViewModel, MainViewModelV2>(); // rejestracja MainViewModel jako singleton
             services.AddSingleton<SecondWindowViewModel>();
             services.AddSingleton<ProductsViewModel>(); // rejestracja ProductsViewModel jako singleton
-
+            services.AddSingleton<LoginViewModel>();  
         }
 
         private void ConfigureAppServices(IServiceCollection services)
@@ -71,6 +73,7 @@ namespace P03WeatherForecastWPF.Client
             services.AddSingleton<IMeteoService, LocalMeteoService>(); // rejestracja serwisu jako singleton
             services.AddSingleton<IProductService, ProductService>(); // rejestracja serwisu jako singleton
             services.AddSingleton<IMeesageDialogService, WpfMessageDialogService>(); // rejestracja serwisu jako singleton
+            services.AddSingleton<IAuthApiClientService, AuthApiClientService>(); // rejestracja serwisu jako singleton
 
         }
 

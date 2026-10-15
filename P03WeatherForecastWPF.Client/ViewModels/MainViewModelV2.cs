@@ -5,7 +5,9 @@ using P03WeatherForecastWPF.Client.Commands;
 using P03WeatherForecastWPF.Client.Models;
 using P03WeatherForecastWPF.Client.Services;
 using P04WeatherForecastConsole.Client;
+using P06Shop.Shared;
 using P06Shop.Shared.Models;
+using P06Shop.Shared.Services.AuthService;
 using P06Shop.Shared.Services.WeatherSeervice;
 using System;
 using System.Collections.Generic;
@@ -122,13 +124,29 @@ namespace P03WeatherForecastWPF.Client.ViewModels
         [RelayCommand]
         public async Task OpenWindow()
         {
-            var secondWindow = _serviceProvider.GetService<ShopProductsView>();
-            var secondWindowViewModel = _serviceProvider.GetService<ProductsViewModel>();
-         
-            secondWindow.DataContext = secondWindowViewModel;
-            await secondWindowViewModel.LoadProductsAsync();
+            if (!string.IsNullOrEmpty(LoginViewModel.Token))
+            {
+                var secondWindow = _serviceProvider.GetService<ShopProductsView>();
+                var secondWindowViewModel = _serviceProvider.GetService<ProductsViewModel>();
 
-            secondWindow.Show();
+                secondWindow.DataContext = secondWindowViewModel;
+                await secondWindowViewModel.LoadProductsAsync();
+
+                secondWindow.Show();
+            }
+            else
+            {
+                // Show a message box or some notification to the user that they need to log in first
+            }
+
+
+        }
+
+        [RelayCommand]
+        public void OpenLogin()
+        {
+            LoginView loginView = _serviceProvider.GetService<LoginView>();
+            loginView.Show();
         }
     }
 }
