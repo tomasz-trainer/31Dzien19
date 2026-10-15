@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace P05Shop.API.Services
 {
-    public class AuthService : IAuthService
+    public class AuthService : AuthApiClientService
     {
         private readonly DataContext _context;
         public readonly IConfiguration _config;

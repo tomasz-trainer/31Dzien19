@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using P06Shop.Shared;
 using P06Shop.Shared.Auth;
 using P06Shop.Shared.Services.AuthService;
+using System.Security.Claims;
 
 namespace P05Shop.API.Controllers
 {
@@ -11,9 +12,9 @@ namespace P05Shop.API.Controllers
   // [Authorize]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
+        private readonly AuthApiClientService _authService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(AuthApiClientService authService)
         {
             _authService = authService;
         }
@@ -51,7 +52,18 @@ namespace P05Shop.API.Controllers
             return "This is my secret key for JWT token generation";
         }
 
+        [HttpPost("changePassword"), Authorize]
 
+        public async Task<ActionResult<ServiceResponse<bool>>> ChangePassword([FromBody] string newPassword)
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            var response = await _authService.ChangePassword(userId, newPassword);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
 
     }
 }
