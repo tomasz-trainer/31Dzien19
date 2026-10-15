@@ -30,6 +30,8 @@ namespace P11BlazorWebAssembly.Client
                 client.BaseAddress = new Uri(builder.Configuration["ApiBaseUrl"]);
             });
 
+
+
             builder.Services.AddLocalStorageServices();
 
             builder.Services.AddAuthorizationCore();

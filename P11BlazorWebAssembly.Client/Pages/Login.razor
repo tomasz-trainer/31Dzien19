@@ -1,0 +1,53 @@
+﻿@page "/login"
+@using P06Shop.Shared.Auth
+@using P06Shop.Shared.Services.AuthService
+
+@inject IAuthApiClientService AuthApiClientService
+@inject NavigationManager NavigationManager
+@inject ILocalStorageService LocalStorageService
+
+<h3>Login</h3>
+
+
+
+<EditForm Model="userLoginDto" OnValidSubmit="HandleValidSubmit">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="email">Email</label>
+        <InputText id="email" class="form-control" @bind-Value="userLoginDto.Email" />
+    </div>
+
+    <div class="form-group">
+        <label for="password">Password</label>
+        <InputText id="password" class="form-control" @bind-Value="userLoginDto.Password" />
+    </div>
+ 
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
+
+<p>@errorMessage</p>
+ 
+@code {
+    private UserLoginDto userLoginDto = new UserLoginDto();
+    private string errorMessage = string.Empty;
+    private string token = string.Empty;
+
+    private async Task HandleValidSubmit()
+    {
+        var result = await AuthApiClientService.Login(userLoginDto);
+        if (result.Success)
+        {
+            await LocalStorageService.SetItemAsync("authToken", result.Data); 
+            //  NavigationManager.NavigateTo("/");
+           
+        }
+        else
+        {
+            // Handle login failure (e.g., show an error message)
+            errorMessage = result.Message;
+        }
+    }
+}
