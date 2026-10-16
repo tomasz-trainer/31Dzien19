@@ -17,11 +17,11 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Barcode</th>
-                <th>Price</th>
-                <th>ReleaseDate</th>
+                <th style="cursor: pointer" @onclick='() => SortBy("Id")'>Id @SortIndicator("Id")</th>
+                <th style="cursor: pointer" @onclick='() => SortBy("Title")'>Title @SortIndicator("Title")</th>
+                <th style="cursor: pointer" @onclick='() => SortBy("Barcode")'>Barcode @SortIndicator("Barcode")</th>
+                <th style="cursor: pointer" @onclick='() => SortBy("Price")'>Price @SortIndicator("Price")</th>
+                <th style="cursor: pointer" @onclick='() => SortBy("ReleaseDate")'>ReleaseDate @SortIndicator("ReleaseDate")</th>
                 <th>Options</th>
             </tr>
         </thead>
@@ -62,9 +62,50 @@ else
         ? 1
         : (int)Math.Ceiling(products.Count / (double)pageSize);
 
-    // wycinek listy odpowiadający bieżącej stronie - liczony na żywo z pełnej listy produktów
+    string? sortColumn;
+    bool sortDescending;
+
+    IEnumerable<Product> SortedProducts
+    {
+        get
+        {
+            if (products == null) return Enumerable.Empty<Product>();
+
+            return sortColumn switch
+            {
+                "Id" => Order(p => p.Id),
+                "Title" => Order(p => p.Title),
+                "Barcode" => Order(p => p.Barcode),
+                "Price" => Order(p => p.Price),
+                "ReleaseDate" => Order(p => p.ReleaseDate),
+                _ => products
+            };
+        }
+    }
+
+    IEnumerable<Product> Order<TKey>(Func<Product, TKey> keySelector) =>
+        sortDescending ? products!.OrderByDescending(keySelector) : products!.OrderBy(keySelector);
+
+    // wycinek posortowanej listy odpowiadający bieżącej stronie
     IEnumerable<Product> PagedProducts =>
-        products?.Skip((currentPage - 1) * pageSize).Take(pageSize) ?? Enumerable.Empty<Product>();
+        SortedProducts.Skip((currentPage - 1) * pageSize).Take(pageSize);
+
+    void SortBy(string column)
+    {
+        if (sortColumn == column)
+        {
+            sortDescending = !sortDescending;
+        }
+        else
+        {
+            sortColumn = column;
+            sortDescending = false;
+        }
+        currentPage = 1;
+    }
+
+    string SortIndicator(string column) =>
+        sortColumn != column ? string.Empty : sortDescending ? " ▼" : " ▲";
 
     override protected async Task OnInitializedAsync()
     {

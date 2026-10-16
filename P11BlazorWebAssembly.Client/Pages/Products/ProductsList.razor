@@ -25,11 +25,11 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Barcode</th>
-                <th>Price</th>
-                <th>ReleaseDate</th>
+                <th style="cursor: pointer" @onclick='() => SortBy("Id")'>Id @SortIndicator("Id")</th>
+                <th style="cursor: pointer" @onclick='() => SortBy("Title")'>Title @SortIndicator("Title")</th>
+                <th style="cursor: pointer" @onclick='() => SortBy("Barcode")'>Barcode @SortIndicator("Barcode")</th>
+                <th style="cursor: pointer" @onclick='() => SortBy("Price")'>Price @SortIndicator("Price")</th>
+                <th style="cursor: pointer" @onclick='() => SortBy("ReleaseDate")'>ReleaseDate @SortIndicator("ReleaseDate")</th>
                 <th>Options</th>
             </tr>
         </thead>
@@ -38,7 +38,7 @@ else
             {
                 <tr><td colspan="6"><em>Brak produktów</em></td></tr>
             }
-            @foreach (var product in products)
+            @foreach (var product in SortedProducts)
             {
                 <tr>
                     <td>@product.Id</td>
@@ -71,6 +71,47 @@ else
     int TotalPages => products == null || products.Count == 0
         ? 1
         : (int)Math.Ceiling(totalCount / (double)pageSize);
+
+    string? sortColumn;
+    bool sortDescending;
+
+    // sortowanie lokalne dotyczy tylko produktów z aktualnie pobranej strony
+    IEnumerable<Product> SortedProducts
+    {
+        get
+        {
+            if (products == null) return Enumerable.Empty<Product>();
+
+            return sortColumn switch
+            {
+                "Id" => Order(p => p.Id),
+                "Title" => Order(p => p.Title),
+                "Barcode" => Order(p => p.Barcode),
+                "Price" => Order(p => p.Price),
+                "ReleaseDate" => Order(p => p.ReleaseDate),
+                _ => products
+            };
+        }
+    }
+
+    IEnumerable<Product> Order<TKey>(Func<Product, TKey> keySelector) =>
+        sortDescending ? products!.OrderByDescending(keySelector) : products!.OrderBy(keySelector);
+
+    void SortBy(string column)
+    {
+        if (sortColumn == column)
+        {
+            sortDescending = !sortDescending;
+        }
+        else
+        {
+            sortColumn = column;
+            sortDescending = false;
+        }
+    }
+
+    string SortIndicator(string column) =>
+        sortColumn != column ? string.Empty : sortDescending ? " ▼" : " ▲";
 
 
 
