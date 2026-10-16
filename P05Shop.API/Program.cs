@@ -33,6 +33,7 @@ namespace P05Shop.API
             builder.Services.AddScoped<IProductService, ProductService>();
             builder.Services.AddScoped<IMeteoService, MeteoService>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
          
             // addScoped - oznacza, że w trakcie jednego requestu będzie istniała tylko jedna instancja klasy ProductService

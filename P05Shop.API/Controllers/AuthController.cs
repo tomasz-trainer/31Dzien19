@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using P06Shop.Shared;
 using P06Shop.Shared.Auth;
-using P06Shop.Shared.Services.AuthService;
+using P05Shop.API.Services;
 using System.Security.Claims;
 
 namespace P05Shop.API.Controllers
@@ -12,9 +12,9 @@ namespace P05Shop.API.Controllers
   // [Authorize]
     public class AuthController : ControllerBase
     {
-        private readonly AuthApiClientService _authService;
+        private readonly IAuthService _authService;
 
-        public AuthController(AuthApiClientService authService)
+        public AuthController(IAuthService authService)
         {
             _authService = authService;
         }

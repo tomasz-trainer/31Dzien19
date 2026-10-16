@@ -2,13 +2,12 @@
 using P05Shop.API.Models;
 using P06Shop.Shared;
 using P06Shop.Shared.Auth;
-using P06Shop.Shared.Services.AuthService;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace P05Shop.API.Services
 {
-    public class AuthService : AuthApiClientService
+    public class AuthService : IAuthService
     {
         private readonly DataContext _context;
         public readonly IConfiguration _config;

@@ -10,4 +10,5 @@
   <Project Path="P12MAUI.Client/P12MAUI.Client.csproj" Id="7b1f8e71-b17a-4bfc-91f6-e74e85fb0495">
     <Deploy Solution="Debug|*" />
   </Project>
+  <Project Path="P13Shop.AppHost/P13Shop.AppHost.csproj" />
 </Solution>

@@ -1,0 +1,17 @@
+<Project Sdk="Aspire.AppHost.Sdk/13.6.1">
+
+  <ItemGroup>
+    <ProjectReference Include="..\P05Shop.API\P05Shop.API.csproj" />
+    <ProjectReference Include="..\P11BlazorWebAssembly.Client\P11BlazorWebAssembly.Client.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AspireUseCliBundle>true</AspireUseCliBundle>
+    <UserSecretsId>08a43948-03ac-4d1e-9022-5a79db05bdd5</UserSecretsId>
+  </PropertyGroup>
+
+</Project>
